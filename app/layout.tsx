@@ -41,11 +41,11 @@ export default function RootLayout({
         className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
         
-        <Theme appearance="dark" accentColor="yellow" panelBackground="solid" scaling="110%">
+        <Theme appearance="light" accentColor="yellow" panelBackground="solid" scaling="110%">
 
         <NavBar />
         <main className="p-5">{children}</main>
-        <ThemePanel />
+        {/* <ThemePanel /> */}
         </Theme>
 
       </body>
