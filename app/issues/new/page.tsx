@@ -1,11 +1,13 @@
-'use client'
+"use client";
 import { Box, Button, TextField } from '@radix-ui/themes'
 import React from 'react'
-import SimpleMDE from "react-simplemde-editor";
+import dynamic from 'next/dynamic';
 import "easymde/dist/easymde.min.css";
 import { Controller,  useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
 interface IssueForm {
   title: string;
@@ -19,8 +21,13 @@ const NewIssuePage = () => {
 
   return (
     <form className='max-w-xl space-y-3' onSubmit={handleSubmit(async (data) => {
-      await axios.post('/api/issues', data)
-      router.push('/issues')
+      try {
+        await axios.post('/api/issues', data)
+        router.push('/issues')
+        
+      } catch (error) {
+        console.error(error)
+      }
     })}>
 
       <Box maxWidth="600px">
