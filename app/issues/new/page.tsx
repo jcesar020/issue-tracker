@@ -11,6 +11,7 @@ import { AiTwotoneInfoCircle } from "react-icons/ai";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/validationSchema';
 import { z } from 'zod';
+import Spinner from '@/app/components/Spinner';
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
@@ -24,6 +25,8 @@ type IssueForm = z.infer<typeof createIssueSchema>;
 const NewIssuePage = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const { register, control, handleSubmit, formState: { errors } } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
@@ -43,10 +46,12 @@ const NewIssuePage = () => {
 
       <form className='max-w-xl space-y-3' onSubmit={handleSubmit(async (data) => {
         try {
+          setIsSubmitting(true)
           await axios.post('/api/issues', data)
           router.push('/issues')
 
         } catch (error) {
+          setIsSubmitting(false)
           console.error(error)
           setError('Something went wrong')
         }
@@ -64,10 +69,13 @@ const NewIssuePage = () => {
           {errors.description && <Text color="red" as='p'>{errors.description.message}</Text>}
         </Box>
         <Box maxWidth="600px">
-          <Button>Submit Issue</Button>
+          <Button 
+            disabled={isSubmitting}
+            className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>Submit Issue
+            {isSubmitting && <Spinner />}</Button>
 
         </Box>
-
+  
 
       </form>
     </div>
