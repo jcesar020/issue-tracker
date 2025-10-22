@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/validationSchema';
 import { z } from 'zod';
 import Spinner from '@/app/components/Spinner';
+import { on } from 'events';
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
@@ -32,6 +33,19 @@ const NewIssuePage = () => {
     resolver: zodResolver(createIssueSchema),
   });
 
+  const onSubmit = handleSubmit(async (data) => {
+        try {
+          setIsSubmitting(true)
+          await axios.post('/api/issues', data)
+          router.push('/issues')
+
+        } catch (error) {
+          setIsSubmitting(false)
+          console.error(error)
+          setError('Something went wrong')
+        }
+      })
+
   return (
     <div>
       {error && <Callout.Root color='red' className='mb-4'>
@@ -44,18 +58,7 @@ const NewIssuePage = () => {
       </Callout.Root>
       }
 
-      <form className='max-w-xl space-y-3' onSubmit={handleSubmit(async (data) => {
-        try {
-          setIsSubmitting(true)
-          await axios.post('/api/issues', data)
-          router.push('/issues')
-
-        } catch (error) {
-          setIsSubmitting(false)
-          console.error(error)
-          setError('Something went wrong')
-        }
-      })}>
+      <form className='max-w-xl space-y-3' onSubmit={onSubmit}>
 
         <Box maxWidth="600px">
           <TextField.Root {...register("title")} size="2" placeholder="Title" />
