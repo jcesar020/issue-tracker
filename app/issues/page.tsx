@@ -7,9 +7,9 @@ import delay from 'delay'
 import IssueAction from './IssueAction'
 
 const IssuePage = async () => {
+  await delay(2000) // Simula una carga de 2 segundos
   const issues = await prisma.issue.findMany()
 
-  await delay(2000) // Simula una carga de 2 segundos
 
   return (
     <div>
