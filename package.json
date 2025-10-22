@@ -5,10 +5,16 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "migrate:deploy": "prisma migrate deploy",
-    "start": "pnpm run migrate:deploy && next start",
-    "lint": "eslint"
+    "migrate:dev": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "start": "next start",
+    "start:docker": "pnpm run migrate:deploy && next start",
+    "lint": "eslint",
+    "docker:build": "docker build -t issue-tracker .",
+    "docker:run": "docker run -p 3000:3000 issue-tracker"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
